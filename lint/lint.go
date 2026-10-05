@@ -13,11 +13,11 @@ import (
 
 // Finding is one problem in one place.
 type Finding struct {
-	Node    string // node index
-	Where   string // "output id_expression" or "condition to n20"
-	Code    string
-	Fails   bool // the live engine fails the instance, rather than giving a wrong answer
-	Message string
+	Node    string `json:"node"`  // node index
+	Where   string `json:"where"` // "output id_expression" or "condition to n20"
+	Code    string `json:"code"`
+	Fails   bool   `json:"fails"` // the live engine fails the instance, rather than giving a wrong answer
+	Message string `json:"message"`
 }
 
 func (f Finding) String() string {

@@ -1,7 +1,7 @@
 // Command drydock loads and checks OneGov workflow exports.
 //
 //	drydock inspect <export.json | bundle-folder>
-//	drydock lint    <export.json | bundle-folder>
+//	drydock lint    <export.json | bundle-folder> [-json]
 //	drydock run     <export.json | bundle-folder> <case.yaml> [-json] [-fork all]
 //	drydock replay  <export.json | bundle-folder> <context.json> <legs.json> [-fork all]
 //	drydock paths   <export.json | bundle-folder> [base.yaml] [-mode auto|all|each] [-workers N] [-timeout 60s] [-json]
@@ -29,7 +29,7 @@ import (
 
 const usage = `usage:
   drydock inspect <export.json | bundle-folder>
-  drydock lint    <export.json | bundle-folder>
+  drydock lint    <export.json | bundle-folder> [-json]
   drydock run     <export.json | bundle-folder> <case.yaml> [-json] [-fork all]
   drydock replay  <export.json | bundle-folder> <context.json> <legs.json> [-fork all]
   drydock paths   <export.json | bundle-folder> [base.yaml] [-mode auto|all|each] [-workers N] [-timeout 60s] [-json]
@@ -37,6 +37,10 @@ const usage = `usage:
   drydock dot     <export.json | bundle-folder>`
 
 func main() {
+	if len(os.Args) >= 2 && os.Args[1] == "lint" {
+		lintCmd(os.Args[2:])
+		return
+	}
 	if len(os.Args) >= 2 && os.Args[1] == "view" {
 		viewCmd(os.Args[2:])
 		return
@@ -65,25 +69,6 @@ func main() {
 		inspect(w, problems)
 		if err != nil {
 			os.Exit(1)
-		}
-	case "lint":
-		if err != nil {
-			fail(err.Error())
-		}
-		findings, st := lint.Workflow(w)
-		fails := 0
-		for _, f := range findings {
-			if f.Fails {
-				fails++
-			}
-		}
-		fmt.Printf("%s v%s: checked %d expressions and %d conditions\n", w.Name, w.Version, st.Expressions, st.Conditions)
-		fmt.Printf("%d findings, %d would fail an instance\n\n", len(findings), fails)
-		for _, f := range findings {
-			fmt.Println(f)
-		}
-		if fails > 0 {
-			os.Exit(2)
 		}
 	case "dot":
 		if err != nil {
@@ -393,6 +378,55 @@ func pathsCmd(args []string) {
 	}
 	if len(byStatus[sim.Failed])+len(byStatus[sim.Stuck]) > 0 {
 		os.Exit(5)
+	}
+}
+
+func lintCmd(args []string) {
+	fs := flag.NewFlagSet("lint", flag.ExitOnError)
+	asJSON := fs.Bool("json", false, "print the findings as JSON")
+	var pos []string
+	for len(args) > 0 {
+		fs.Parse(args)
+		if fs.NArg() == 0 {
+			break
+		}
+		pos = append(pos, fs.Arg(0))
+		args = fs.Args()[1:]
+	}
+	if len(pos) != 1 {
+		fail(usage)
+	}
+	w, _, err := workflow.Load(pos[0])
+	if err != nil {
+		fail(err.Error())
+	}
+	findings, st := lint.Workflow(w)
+	fails := 0
+	for _, f := range findings {
+		if f.Fails {
+			fails++
+		}
+	}
+	if *asJSON {
+		if findings == nil {
+			findings = []lint.Finding{}
+		}
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", "  ")
+		enc.Encode(map[string]any{
+			"workflow": w.Name, "version": w.Version,
+			"expressions": st.Expressions, "conditions": st.Conditions,
+			"fails": fails, "findings": findings,
+		})
+		return
+	}
+	fmt.Printf("%s v%s: checked %d expressions and %d conditions\n", w.Name, w.Version, st.Expressions, st.Conditions)
+	fmt.Printf("%d findings, %d would fail an instance\n\n", len(findings), fails)
+	for _, f := range findings {
+		fmt.Println(f)
+	}
+	if fails > 0 {
+		os.Exit(2)
 	}
 }
 
