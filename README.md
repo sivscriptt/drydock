@@ -55,7 +55,7 @@ Anything the case leaves out is reported, never guessed: a task with no decision
 
 Replaying the same past workflow with two cases shows the outage `lint` found: an applicant already in the registry passes, and one who is not fails at the exact expression the live engine failed on.
 
-`view` turns an exploration into one HTML page that plays it:
+`view` turns an exploration into one HTML page that plays it. **[Watch the demo](https://sivscriptt.github.io/drydock/demo/)**: a made-up fishing licence workflow, explored and played in the browser.
 
 ```bash
 go run ./cmd/drydock view testdata/licence-bundle testdata/cases/submission.yaml -o licence.html
