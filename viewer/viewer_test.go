@@ -115,7 +115,7 @@ func TestRenderIsOneSelfContainedPage(t *testing.T) {
 
 func TestDisplayName(t *testing.T) {
 	for in, want := range map[string]string{
-		"Verify application ( $.{applicantID} )":                                   "Verify application",
+		"Verify application ( $.{applicantID} )":                               "Verify application",
 		"Verification - Fishing Licence ( $.{applicantID} ) - ( $.{otherID} )": "Verification - Fishing Licence",
 		"Approve licence": "Approve licence",
 		"$.{x}":           "$.{x}",
