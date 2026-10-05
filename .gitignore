@@ -6,3 +6,4 @@
 drydock-view.html
 *.html
 !viewer/assets/*.html
+!docs/**/*.html
