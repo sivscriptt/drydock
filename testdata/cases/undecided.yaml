@@ -1,0 +1,8 @@
+name: verified, waiting for approval
+submission:
+  attributes: {island: Fuvahmulah, boats: [{name: Dhoni}]}
+  meta: {user_identifier: A111111}
+tasks:
+  n2: {state: Completed}
+lookups:
+  n3: []

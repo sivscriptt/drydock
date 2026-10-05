@@ -1,0 +1,409 @@
+{
+ "rec": {
+  "id": 42,
+  "uuid": "11111111-2222-3333-4444-555555555555",
+  "name": "Fishing Licence - Apply",
+  "version": "1.0.0",
+  "specification": {
+   "trigger": {},
+   "parameters": [],
+   "output": []
+  }
+ },
+ "nodes": [
+  {
+   "id": 100,
+   "uuid": "00000000-0000-0000-0000-000000000100",
+   "parent_id": null,
+   "node_index": "n0",
+   "workflow_control_id": 1,
+   "milestone": null,
+   "parameter_map": [],
+   "output_map": [],
+   "metadata": {
+    "label": "Start",
+    "type": "start",
+    "task": {
+     "id": null,
+     "name": null
+    }
+   }
+  },
+  {
+   "id": 101,
+   "uuid": "00000000-0000-0000-0000-000000000101",
+   "parent_id": null,
+   "node_index": "n1",
+   "workflow_control_id": 22,
+   "milestone": null,
+   "parameter_map": {
+    "expressions": [
+     {
+      "key": "isLocal",
+      "expression": "ifCondition( $.{island} == 'Male', 1, 0 )",
+      "returnType": "numeric"
+     }
+    ]
+   },
+   "output_map": {
+    "state": "string"
+   },
+   "metadata": {
+    "label": null,
+    "type": "special",
+    "task": []
+   }
+  },
+  {
+   "id": 102,
+   "uuid": "00000000-0000-0000-0000-000000000102",
+   "parent_id": null,
+   "node_index": "n2",
+   "workflow_control_id": 5,
+   "milestone": 1,
+   "parameter_map": {
+    "title": "Verify application ( $.{applicantID} )",
+    "items": [],
+    "meta": {
+     "allowed_inputs": []
+    }
+   },
+   "output_map": {
+    "state": "string"
+   },
+   "metadata": {
+    "label": null,
+    "type": "special",
+    "task": []
+   }
+  },
+  {
+   "id": 103,
+   "uuid": "00000000-0000-0000-0000-000000000103",
+   "parent_id": null,
+   "node_index": "n3",
+   "workflow_control_id": 8,
+   "milestone": null,
+   "parameter_map": {
+    "operation": "select",
+    "table_name": "licence_registry",
+    "conditions": [
+     {
+      "key": "id_number",
+      "value": "$.{applicantID}",
+      "comparison": "="
+     }
+    ]
+   },
+   "output_map": {
+    "state": "string"
+   },
+   "metadata": {
+    "label": null,
+    "type": "special",
+    "task": []
+   }
+  },
+  {
+   "id": 104,
+   "uuid": "00000000-0000-0000-0000-000000000104",
+   "parent_id": null,
+   "node_index": "n4",
+   "workflow_control_id": 5,
+   "milestone": 2,
+   "parameter_map": {
+    "title": "Approve licence"
+   },
+   "output_map": {
+    "state": "string"
+   },
+   "metadata": {
+    "label": null,
+    "type": "special",
+    "task": []
+   }
+  },
+  {
+   "id": 105,
+   "uuid": "00000000-0000-0000-0000-000000000105",
+   "parent_id": null,
+   "node_index": "n5",
+   "workflow_control_id": 21,
+   "milestone": null,
+   "parameter_map": {
+    "collection": "$.{boats}",
+    "actions": [
+     107,
+     106
+    ]
+   },
+   "output_map": {
+    "state": "string"
+   },
+   "metadata": {
+    "label": null,
+    "type": "special",
+    "task": []
+   }
+  },
+  {
+   "id": 108,
+   "uuid": "00000000-0000-0000-0000-000000000108",
+   "parent_id": null,
+   "node_index": "n6",
+   "workflow_control_id": 4,
+   "milestone": null,
+   "parameter_map": [],
+   "output_map": {
+    "state": "string"
+   },
+   "metadata": {
+    "label": "Approved SMS",
+    "type": "special",
+    "task": []
+   }
+  },
+  {
+   "id": 109,
+   "uuid": "00000000-0000-0000-0000-000000000109",
+   "parent_id": null,
+   "node_index": "n7",
+   "workflow_control_id": 2,
+   "milestone": null,
+   "parameter_map": [],
+   "output_map": [],
+   "metadata": {
+    "label": "End",
+    "type": "end",
+    "task": []
+   }
+  },
+  {
+   "id": 110,
+   "uuid": "00000000-0000-0000-0000-000000000110",
+   "parent_id": null,
+   "node_index": "n8",
+   "workflow_control_id": 4,
+   "milestone": null,
+   "parameter_map": [],
+   "output_map": {
+    "state": "string"
+   },
+   "metadata": {
+    "label": "Rejected SMS",
+    "type": "special",
+    "task": []
+   }
+  },
+  {
+   "id": 111,
+   "uuid": "00000000-0000-0000-0000-000000000111",
+   "parent_id": null,
+   "node_index": "n9",
+   "workflow_control_id": 2,
+   "milestone": null,
+   "parameter_map": null,
+   "output_map": [],
+   "metadata": {
+    "label": "End (rejected)",
+    "type": "conditionalEnd",
+    "task": []
+   }
+  },
+  {
+   "id": 112,
+   "uuid": "00000000-0000-0000-0000-000000000112",
+   "parent_id": null,
+   "node_index": "n10",
+   "workflow_control_id": 18,
+   "milestone": null,
+   "parameter_map": [],
+   "output_map": {
+    "state": "string"
+   },
+   "metadata": {
+    "label": "Old note, no longer wired",
+    "type": "special",
+    "task": []
+   }
+  }
+ ],
+ "children": {
+  "n5": [
+   {
+    "id": 106,
+    "uuid": "00000000-0000-0000-0000-000000000106",
+    "parent_id": 105,
+    "node_index": "lm2",
+    "workflow_control_id": 8,
+    "milestone": null,
+    "parameter_map": {
+     "operation": "insert",
+     "table_name": "boat_registry"
+    },
+    "output_map": {
+     "state": "string"
+    },
+    "metadata": {
+     "label": null,
+     "type": "special",
+     "task": []
+    }
+   },
+   {
+    "id": 107,
+    "uuid": "00000000-0000-0000-0000-000000000107",
+    "parent_id": 105,
+    "node_index": "lm1",
+    "workflow_control_id": 8,
+    "milestone": null,
+    "parameter_map": {
+     "operation": "select",
+     "table_name": "boat_registry"
+    },
+    "output_map": {
+     "state": "string"
+    },
+    "metadata": {
+     "label": null,
+     "type": "special",
+     "task": []
+    }
+   }
+  ]
+ },
+ "trans": [
+  {
+   "id": 1,
+   "from_node_id": 100,
+   "to_node_id": 101,
+   "conditions": null,
+   "state_change": null,
+   "active": 1
+  },
+  {
+   "id": 2,
+   "from_node_id": 101,
+   "to_node_id": 102,
+   "conditions": null,
+   "state_change": null,
+   "active": 1
+  },
+  {
+   "id": 3,
+   "from_node_id": 102,
+   "to_node_id": 110,
+   "conditions": "$.n2.state == \"Cancelled\"",
+   "state_change": 9002,
+   "active": 1
+  },
+  {
+   "id": 4,
+   "from_node_id": 102,
+   "to_node_id": 103,
+   "conditions": "$.n2.state == \"Completed\"",
+   "state_change": null,
+   "active": 1
+  },
+  {
+   "id": 5,
+   "from_node_id": 103,
+   "to_node_id": 104,
+   "conditions": "$.n3.count == \"0\"",
+   "state_change": null,
+   "active": 1
+  },
+  {
+   "id": 6,
+   "from_node_id": 103,
+   "to_node_id": 110,
+   "conditions": "$.n3.count != \"0\"",
+   "state_change": 9002,
+   "active": 1
+  },
+  {
+   "id": 7,
+   "from_node_id": 104,
+   "to_node_id": 105,
+   "conditions": "$.n4.state == \"Approved\"",
+   "state_change": 9001,
+   "active": 1
+  },
+  {
+   "id": 8,
+   "from_node_id": 104,
+   "to_node_id": 110,
+   "conditions": "$.n4.state == \"Rejected\"",
+   "state_change": 9002,
+   "active": 1
+  },
+  {
+   "id": 9,
+   "from_node_id": 105,
+   "to_node_id": 108,
+   "conditions": null,
+   "state_change": null,
+   "active": 1
+  },
+  {
+   "id": 10,
+   "from_node_id": 108,
+   "to_node_id": 109,
+   "conditions": null,
+   "state_change": null,
+   "active": 1
+  },
+  {
+   "id": 11,
+   "from_node_id": 110,
+   "to_node_id": 111,
+   "conditions": null,
+   "state_change": null,
+   "active": 1
+  },
+  {
+   "id": 12,
+   "from_node_id": 112,
+   "to_node_id": 109,
+   "conditions": null,
+   "state_change": null,
+   "active": 0
+  }
+ ],
+ "tm": {
+  "applicantID": {
+   "value": "$.meta.user_identifier"
+  },
+  "island": {
+   "value": "$.attributes.island"
+  },
+  "boats": {
+   "value": "$.attributes.boats"
+  }
+ },
+ "ms": [
+  {
+   "id": 2,
+   "name": "Approval",
+   "order": 2
+  },
+  {
+   "id": 1,
+   "name": "Verification",
+   "order": 1
+  }
+ ],
+ "flowStates": [
+  {
+   "id": 9001,
+   "label": "Approved",
+   "public_label": "Licence approved"
+  },
+  {
+   "id": 9002,
+   "label": "Rejected",
+   "public_label": null
+  }
+ ],
+ "listeners": []
+}

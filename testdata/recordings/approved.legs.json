@@ -1,0 +1,84 @@
+{
+ "data": [
+  {
+   "id": 1001,
+   "workflow_node_id": 100,
+   "state_id": 8,
+   "created_at": "2026-10-04T09:00:01.000000Z",
+   "leg_data": null
+  },
+  {
+   "id": 1002,
+   "workflow_node_id": 101,
+   "state_id": 8,
+   "created_at": "2026-10-04T09:00:02.000000Z",
+   "leg_data": {
+    "expressions": [
+     {
+      "key": "isLocal",
+      "expression": "ifCondition( \"Male\" == 'Male', 1, 0 )",
+      "returnType": "numeric"
+     }
+    ]
+   }
+  },
+  {
+   "id": 1003,
+   "workflow_node_id": 102,
+   "state_id": 8,
+   "created_at": "2026-10-04T09:00:03.000000Z",
+   "leg_data": {
+    "title": "Verify application ( A123456 )"
+   }
+  },
+  {
+   "id": 1004,
+   "workflow_node_id": 103,
+   "state_id": 8,
+   "created_at": "2026-10-04T09:00:04.000000Z",
+   "leg_data": null
+  },
+  {
+   "id": 1005,
+   "workflow_node_id": 104,
+   "state_id": 8,
+   "created_at": "2026-10-04T09:00:05.000000Z",
+   "leg_data": null
+  },
+  {
+   "id": 1006,
+   "workflow_node_id": 105,
+   "state_id": 8,
+   "created_at": "2026-10-04T09:00:06.000000Z",
+   "leg_data": null
+  },
+  {
+   "id": 1007,
+   "workflow_node_id": 107,
+   "state_id": 8,
+   "created_at": "2026-10-04T09:00:07.000000Z",
+   "leg_data": null
+  },
+  {
+   "id": 1008,
+   "workflow_node_id": 106,
+   "state_id": 8,
+   "created_at": "2026-10-04T09:00:08.000000Z",
+   "leg_data": null
+  },
+  {
+   "id": 1009,
+   "workflow_node_id": 108,
+   "state_id": 8,
+   "created_at": "2026-10-04T09:00:09.000000Z",
+   "leg_data": null
+  },
+  {
+   "id": 1010,
+   "workflow_node_id": 109,
+   "state_id": 2,
+   "created_at": "2026-10-04T09:00:10.000000Z",
+   "leg_data": null
+  }
+ ]
+}

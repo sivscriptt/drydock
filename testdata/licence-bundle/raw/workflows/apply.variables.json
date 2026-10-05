@@ -1,0 +1,6 @@
+{
+ "applicantID": "string",
+ "island": "string|nullable",
+ "boats": "array",
+ "fee": "numeric|nullable"
+}

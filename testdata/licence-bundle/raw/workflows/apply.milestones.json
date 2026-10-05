@@ -1,0 +1,12 @@
+[
+ {
+  "id": 2,
+  "name": "Approval",
+  "order": 2
+ },
+ {
+  "id": 1,
+  "name": "Verification",
+  "order": 1
+ }
+]

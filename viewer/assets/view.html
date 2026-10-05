@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{.Title}} · Drydock</title>
+<style>{{.CSS}}</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" aria-label="Scenarios">
+    <header class="brand">
+      <span>Drydock</span><small>workflow simulator</small>
+    </header>
+    <section class="wf">
+      <h1 id="wf-name"></h1>
+      <p id="wf-meta" class="muted"></p>
+      <dl class="stats" id="stats"></dl>
+      <p id="wf-note" class="note" hidden></p>
+    </section>
+    <section class="toggles">
+      <label class="switch"><input type="checkbox" id="t-coverage"><span>Coverage</span></label>
+      <label class="switch"><input type="checkbox" id="t-plain"><span>Plain language</span></label>
+      <label class="switch"><input type="checkbox" id="t-follow" checked><span>Follow</span></label>
+    </section>
+    <section id="findings" class="group" hidden>
+      <h2>Problems</h2>
+      <ul id="finding-list" class="list"></ul>
+    </section>
+    <section class="group">
+      <h2>Scenarios</h2>
+      <div id="scenario-groups"></div>
+    </section>
+  </aside>
+
+  <main class="stage">
+    <svg id="canvas" role="img" aria-label="Workflow diagram">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0L10 5L0 10z" class="arrowhead"/>
+        </marker>
+        <marker id="arrow-on" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0L10 5L0 10z" class="arrowhead on"/>
+        </marker>
+        <filter id="lift" x="-10%" y="-10%" width="120%" height="140%">
+          <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="black" flood-opacity="0.05"/>
+        </filter>
+      </defs>
+      <g id="viewport">
+        <g id="bands"></g>
+        <g id="edges"></g>
+        <g id="labels"></g>
+        <g id="nodes"></g>
+        <g id="fx"></g>
+      </g>
+    </svg>
+
+    <div class="minimap" aria-hidden="true">
+      <svg id="mini"><use href="#bands"/><use href="#edges"/><use href="#nodes"/><rect id="mini-view" rx="6"/></svg>
+    </div>
+
+    <div class="zoom" role="group" aria-label="Zoom">
+      <button type="button" id="z-in" aria-label="Zoom in">+</button>
+      <button type="button" id="z-out" aria-label="Zoom out">−</button>
+      <button type="button" id="z-fit" aria-label="Fit to screen">Fit</button>
+    </div>
+
+    <div class="dock">
+      <div class="caption" id="caption" aria-live="polite">
+        <span class="cap-kind" id="cap-kind"></span>
+        <span class="cap-text" id="cap-text">Pick a scenario to play it on the workflow.</span>
+      </div>
+      <div class="transport" role="group" aria-label="Playback">
+        <button type="button" id="p-back" aria-label="Previous step"><svg viewBox="0 0 24 24"><path d="M6 6h2.2v12H6zM18.5 6v12L9.5 12z"/></svg></button>
+        <button type="button" id="p-play" class="primary" aria-label="Play">
+          <svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg>
+          <svg class="i-pause" viewBox="0 0 24 24"><path d="M8 5h3v14H8zM13 5h3v14h-3z"/></svg>
+        </button>
+        <button type="button" id="p-next" aria-label="Next step"><svg viewBox="0 0 24 24"><path d="M15.8 6H18v12h-2.2zM5.5 6v12l9-6z"/></svg></button>
+        <input type="range" id="p-scrub" min="0" max="0" value="0" aria-label="Step">
+        <span class="count" id="p-count">0 / 0</span>
+        <label class="speed"><span class="sr">Speed</span>
+          <select id="p-speed">
+            <option value="0.5">0.5×</option>
+            <option value="1" selected>1×</option>
+            <option value="2">2×</option>
+            <option value="4">4×</option>
+          </select>
+        </label>
+      </div>
+    </div>
+  </main>
+</div>
+<script id="data" type="application/json">{{.Data}}</script>
+<script>{{.Dagre}}</script>
+<script>{{.App}}</script>
+</body>
+</html>

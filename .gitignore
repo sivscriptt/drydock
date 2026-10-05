@@ -1,0 +1,8 @@
+/drydock
+.gstack/
+.DS_Store
+# Real workflow exports and case files stay out of this repo.
+/private/
+drydock-view.html
+*.html
+!viewer/assets/*.html

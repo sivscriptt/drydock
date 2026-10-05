@@ -1,0 +1,15 @@
+name: approved, no existing licence
+description: First-time applicant from Malé with two boats. Verified, approved, both boats registered.
+submission:
+  attributes:
+    island: Male
+    boats:
+      - {name: Blue Fin, length: 12}
+      - {name: Sea Star, length: 9}
+  meta: {user_identifier: A123456}
+tasks:
+  n2: {state: Completed}
+  n4: {state: Approved}
+lookups:
+  n3: []
+  n5/lm1: [[], [{id: 7, name: Sea Star}]]

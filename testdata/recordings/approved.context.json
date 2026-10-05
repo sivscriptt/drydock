@@ -1,0 +1,32 @@
+{
+ "context_data": {
+  "meta": {
+   "user_identifier": "A123456",
+   "reference": "LIC.TEST.0042"
+  },
+  "applicantID": "A123456",
+  "island": "Male",
+  "fee": null,
+  "boats": [
+   {
+    "name": "Blue Fin",
+    "length": 12
+   }
+  ],
+  "n2": {
+   "state": "Completed",
+   "remarks": "",
+   "task_uuid": "t-2"
+  },
+  "n3": {
+   "state": "success",
+   "count": 0,
+   "output": []
+  },
+  "n4": {
+   "state": "Rejected",
+   "remarks": "",
+   "task_uuid": "t-4"
+  }
+ }
+}

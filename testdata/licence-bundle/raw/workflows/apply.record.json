@@ -1,0 +1,11 @@
+{
+ "id": 42,
+ "uuid": "11111111-2222-3333-4444-555555555555",
+ "name": "Fishing Licence - Apply",
+ "version": "1.0.0",
+ "specification": {
+  "trigger": {},
+  "parameters": [],
+  "output": []
+ }
+}

@@ -1,0 +1,98 @@
+[
+ {
+  "id": 1,
+  "from_node_id": 100,
+  "to_node_id": 101,
+  "conditions": null,
+  "state_change": null,
+  "active": 1
+ },
+ {
+  "id": 2,
+  "from_node_id": 101,
+  "to_node_id": 102,
+  "conditions": null,
+  "state_change": null,
+  "active": 1
+ },
+ {
+  "id": 3,
+  "from_node_id": 102,
+  "to_node_id": 110,
+  "conditions": "$.n2.state == \"Cancelled\"",
+  "state_change": 9002,
+  "active": 1
+ },
+ {
+  "id": 4,
+  "from_node_id": 102,
+  "to_node_id": 103,
+  "conditions": "$.n2.state == \"Completed\"",
+  "state_change": null,
+  "active": 1
+ },
+ {
+  "id": 5,
+  "from_node_id": 103,
+  "to_node_id": 104,
+  "conditions": "$.n3.count == \"0\"",
+  "state_change": null,
+  "active": 1
+ },
+ {
+  "id": 6,
+  "from_node_id": 103,
+  "to_node_id": 110,
+  "conditions": "$.n3.count != \"0\"",
+  "state_change": 9002,
+  "active": 1
+ },
+ {
+  "id": 7,
+  "from_node_id": 104,
+  "to_node_id": 105,
+  "conditions": "$.n4.state == \"Approved\"",
+  "state_change": 9001,
+  "active": 1
+ },
+ {
+  "id": 8,
+  "from_node_id": 104,
+  "to_node_id": 110,
+  "conditions": "$.n4.state == \"Rejected\"",
+  "state_change": 9002,
+  "active": 1
+ },
+ {
+  "id": 9,
+  "from_node_id": 105,
+  "to_node_id": 108,
+  "conditions": null,
+  "state_change": null,
+  "active": 1
+ },
+ {
+  "id": 10,
+  "from_node_id": 108,
+  "to_node_id": 109,
+  "conditions": null,
+  "state_change": null,
+  "active": 1
+ },
+ {
+  "id": 11,
+  "from_node_id": 110,
+  "to_node_id": 111,
+  "conditions": null,
+  "state_change": null,
+  "active": 1
+ },
+ {
+  "id": 12,
+  "from_node_id": 112,
+  "to_node_id": 109,
+  "conditions": null,
+  "state_change": null,
+  "active": 0
+ }
+]

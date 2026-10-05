@@ -1,0 +1,9 @@
+name: two boats from Malé
+description: Only the submission is fixed; the explorer tries every decision.
+submission:
+  attributes:
+    island: Male
+    boats:
+      - {name: Blue Fin, length: 12}
+      - {name: Sea Star, length: 9}
+  meta: {user_identifier: A123456}

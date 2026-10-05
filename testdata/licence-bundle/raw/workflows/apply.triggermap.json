@@ -1,0 +1,11 @@
+{
+ "applicantID": {
+  "value": "$.meta.user_identifier"
+ },
+ "island": {
+  "value": "$.attributes.island"
+ },
+ "boats": {
+  "value": "$.attributes.boats"
+ }
+}

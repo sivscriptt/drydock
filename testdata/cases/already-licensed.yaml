@@ -1,0 +1,8 @@
+name: rejected, already holds a licence
+submission:
+  attributes: {island: Male, boats: []}
+  meta: {user_identifier: A654321}
+tasks:
+  n2: {state: Completed}
+lookups:
+  n3: [{id_number: A654321, status: Active}]

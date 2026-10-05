@@ -1,0 +1,210 @@
+/* Drydock viewer: a working tool, not a showcase. Paper canvas, ink text,
+   one accent for the route the case takes. Red only for failure, amber only
+   for waiting. Light only. */
+:root {
+  color-scheme: light;
+  --paper: oklch(0.982 0.003 95);
+  --grid: oklch(0.955 0.003 95);
+  --surface: oklch(1 0 0);
+  --surface-2: oklch(0.965 0.003 95);
+  --rule: oklch(0.885 0.004 95);
+  --rule-strong: oklch(0.78 0.006 95);
+  --ink: oklch(0.21 0.01 260);
+  --ink-2: oklch(0.42 0.01 260);
+  --ink-3: oklch(0.53 0.008 260);
+
+  --accent: oklch(0.47 0.15 258);
+  --accent-soft: oklch(0.47 0.15 258 / 0.08);
+  --fail: oklch(0.54 0.19 27);
+  --wait: oklch(0.58 0.13 70);
+
+  /* Node kinds: quiet stripes, told apart by glyph and label first. */
+  --k-start: oklch(0.62 0.01 260);
+  --k-end: oklch(0.62 0.01 260);
+  --k-route: oklch(0.72 0.01 260);
+  --k-other: oklch(0.72 0.01 260);
+  --k-task: oklch(0.6 0.09 255);
+  --k-lookup: oklch(0.63 0.07 195);
+  --k-write: oklch(0.6 0.05 230);
+  --k-expression: oklch(0.6 0.07 300);
+  --k-loop: oklch(0.67 0.09 65);
+  --k-message: oklch(0.63 0.08 0);
+  --k-document: oklch(0.64 0.08 135);
+  --k-payment: oklch(0.67 0.09 90);
+
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+html, body { margin: 0; height: 100%; background: var(--paper); color: var(--ink); }
+button, select, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.app { display: grid; grid-template-columns: 300px 1fr; height: 100dvh; }
+
+/* ---------- sidebar ---------- */
+.side {
+  background: var(--surface);
+  border-inline-end: 1px solid var(--rule);
+  overflow-y: auto;
+  padding: 18px 18px 40px;
+  display: flex; flex-direction: column; gap: 22px;
+}
+.brand { display: flex; align-items: baseline; gap: 8px; font-size: 13px; font-weight: 600; }
+.brand small { font-family: var(--mono); font-weight: 400; color: var(--ink-3); font-size: 11px; }
+.wf h1 { font-size: 16px; line-height: 1.3; margin: 0 0 2px; font-weight: 600; text-wrap: balance; }
+.muted { color: var(--ink-3); margin: 0; font-size: 12.5px; }
+.stats { display: flex; gap: 20px; margin: 12px 0 0; padding: 10px 0 0; border-top: 1px solid var(--rule); }
+.stats div { display: flex; flex-direction: column; }
+.stats dt { font-size: 11px; color: var(--ink-3); }
+.stats dd { margin: 0; font-family: var(--mono); font-size: 13px; font-variant-numeric: tabular-nums; }
+.note { font-size: 12px; color: var(--ink-2); border-inline-start: 2px solid var(--rule-strong); padding: 2px 0 2px 10px; margin: 12px 0 0; }
+
+.toggles { display: flex; flex-direction: column; gap: 6px; }
+.switch { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-2); cursor: pointer; width: fit-content; }
+.switch input { margin: 0; accent-color: var(--accent); width: 14px; height: 14px; }
+
+.group h2 { font-size: 11px; font-weight: 600; color: var(--ink-3); margin: 0 0 6px; letter-spacing: 0.04em; text-transform: uppercase; }
+.group h3 { font-size: 12px; color: var(--ink-2); margin: 16px 0 4px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.list { list-style: none; margin: 0; padding: 0; }
+.item {
+  display: block; text-align: start; cursor: pointer;
+  background: transparent; border: 0; border-radius: 4px; padding: 7px 8px; margin: 0 -8px; width: calc(100% + 16px);
+  transition-property: background-color; transition-duration: 120ms;
+}
+.item:hover { background: var(--surface-2); }
+.item:focus-visible { outline-offset: -2px; }
+.item[aria-current="true"] { background: var(--accent-soft); }
+.item .t { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; }
+.item .d { color: var(--ink-3); font-size: 12px; margin-top: 1px; padding-inline-start: 14px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.item .id { margin-inline-start: auto; color: var(--ink-3); font-family: var(--mono); font-size: 11px; }
+
+.dot { width: 6px; height: 6px; border-radius: 1px; flex: none; background: var(--ink-3); }
+.dot.completed { background: var(--accent); }
+.dot.failed { background: var(--fail); }
+.dot.stuck, .dot.runaway, .dot.waiting { background: var(--wait); }
+
+/* ---------- stage ---------- */
+.stage { position: relative; overflow: hidden; background-color: var(--paper);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 40px 40px; }
+#canvas { width: 100%; height: 100%; display: block; cursor: grab; touch-action: none; }
+#canvas.dragging { cursor: grabbing; }
+
+.zoom { position: absolute; top: 14px; inset-inline-end: 14px; display: flex; background: var(--surface);
+  border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+.zoom button { border: 0; background: transparent; min-width: 34px; height: 30px; cursor: pointer; font-size: 13px; color: var(--ink-2); }
+.zoom button + button { border-inline-start: 1px solid var(--rule); }
+.zoom button:hover { background: var(--surface-2); color: var(--ink); }
+.zoom button:focus-visible { outline-offset: -2px; }
+
+.dock { position: absolute; left: 50%; bottom: 16px; translate: -50% 0; width: min(780px, calc(100% - 420px));
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 8px;
+  box-shadow: 0 1px 2px oklch(0 0 0 / 0.04), 0 8px 24px oklch(0 0 0 / 0.06); }
+.caption { padding: 11px 14px 10px; min-height: 44px; display: flex; align-items: baseline; gap: 10px; border-bottom: 1px solid var(--rule); }
+.cap-kind { font-family: var(--mono); font-size: 11px; color: var(--ink-3); flex: none; }
+.cap-text { font-size: 13.5px; text-wrap: pretty; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.cap-text b { font-weight: 600; }
+.transport { padding: 6px 8px; display: flex; align-items: center; gap: 2px; }
+.transport button { border: 0; background: transparent; border-radius: 4px; width: 32px; height: 30px; cursor: pointer; color: var(--ink-2);
+  transition-property: background-color, scale; transition-duration: 120ms; transition-timing-function: var(--ease); }
+.transport button:hover { background: var(--surface-2); color: var(--ink); }
+.transport button:active { scale: 0.96; }
+.transport svg { width: 15px; height: 15px; fill: currentColor; display: block; margin: auto; }
+.transport .primary { position: relative; color: var(--surface); background: var(--ink); }
+.transport .primary:hover { background: oklch(0.32 0.01 260); color: var(--surface); }
+.transport .primary svg { position: absolute; inset: 0; transition-property: opacity, scale, filter; transition-duration: 200ms; transition-timing-function: var(--ease); }
+.transport .primary .i-pause { opacity: 0; scale: 0.25; filter: blur(4px); }
+.transport .primary.playing .i-play { opacity: 0; scale: 0.25; filter: blur(4px); }
+.transport .primary.playing .i-pause { opacity: 1; scale: 1; filter: blur(0); }
+#p-scrub { flex: 1; accent-color: var(--ink); margin: 0 10px; }
+.count { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; min-width: 52px; text-align: end; }
+.speed select { background: transparent; border: 1px solid var(--rule); border-radius: 4px; padding: 3px 4px; margin-inline-start: 8px; font-family: var(--mono); font-size: 12px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
+/* ---------- diagram ---------- */
+#nodes { filter: url(#lift); }
+.node { opacity: 0.5; transition-property: opacity; transition-duration: 250ms; transition-timing-function: var(--ease); }
+.node.visited, .node.running { opacity: 1; }
+.node .card { fill: var(--surface); stroke: var(--rule-strong); stroke-width: 1; transition-property: stroke, fill; transition-duration: 200ms; }
+.node .stripe { fill: var(--kind); }
+.node .glyph { fill: none; stroke: var(--ink-3); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.node .kind { font-size: 10.5px; fill: var(--ink-3); letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600; }
+.node .idx { font-family: var(--mono); font-size: 10.5px; fill: var(--ink-3); }
+.node .name { font-size: 14px; font-weight: 500; fill: var(--ink); }
+.node .ring { display: none; }
+.node .badge { display: none; }
+.node .state { opacity: 0; transition-property: opacity; transition-duration: 200ms; }
+
+.node.running .card { stroke: var(--accent); stroke-width: 2; fill: oklch(0.985 0.012 258); }
+.node.done .card { stroke: var(--accent); stroke-width: 1.5; }
+.node.failed .card { stroke: var(--fail); stroke-width: 2; fill: oklch(0.99 0.008 27); }
+.node.waiting .card, .node.stuck .card { stroke: var(--wait); stroke-width: 2; stroke-dasharray: 5 3; }
+.node.done .s-done, .node.failed .s-fail, .node.waiting .s-wait, .node.stuck .s-stuck { opacity: 1; }
+.state circle { fill: var(--surface); stroke-width: 1.5; }
+.state path { fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.s-done circle, .s-done path { stroke: var(--accent); }
+.s-fail circle, .s-fail path { stroke: var(--fail); }
+.s-wait circle, .s-wait path, .s-stuck circle, .s-stuck path { stroke: var(--wait); }
+
+.edge { fill: none; stroke: var(--rule-strong); stroke-width: 1.25; transition-property: stroke, opacity, stroke-width; transition-duration: 250ms; }
+.edge.taken { stroke: var(--accent); stroke-width: 2; }
+.arrowhead { fill: var(--rule-strong); } .arrowhead.on { fill: var(--accent); }
+.elabel rect { fill: var(--paper); }
+.elabel text { font-family: var(--mono); font-size: 10.5px; fill: var(--ink-3); }
+.elabel.taken text { fill: var(--accent); }
+.story .elabel:not(.taken) { opacity: 0.3; }
+.story .edge:not(.taken) { opacity: 0.45; }
+
+.token, .trail { fill: var(--accent); }
+
+.callout rect { fill: var(--surface); stroke: var(--rule-strong); }
+.callout .rule { fill: var(--accent); stroke: none; }
+.callout text { fill: var(--ink); font-size: 12px; font-weight: 500; }
+.callout.status text { fill: var(--accent); }
+.callout.bad rect { stroke: var(--fail); } .callout.bad .rule { fill: var(--fail); } .callout.bad text { fill: var(--fail); }
+.callout.wait rect { stroke: var(--wait); } .callout.wait .rule { fill: var(--wait); }
+.callout { animation: pop 220ms var(--ease) both; }
+@keyframes pop { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* Milestone swimlanes */
+.band-bg { fill: oklch(0.5 0.02 260 / 0.02); stroke: var(--rule); stroke-dasharray: 2 4; }
+.band-bg.alt { fill: oklch(0.5 0.02 260 / 0.04); }
+.band-label { font-size: 10.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; fill: var(--ink-3); }
+
+/* Minimap */
+.minimap { position: absolute; inset-inline-end: 14px; bottom: 16px; width: 160px; height: 210px; background: var(--surface);
+  border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; cursor: pointer; }
+#mini { width: 100%; height: 100%; display: block; }
+#mini .elabel, #mini .callout, #mini .badge, #mini .band-label { display: none; }
+#mini-view { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.25; vector-effect: non-scaling-stroke; }
+@media (max-width: 1100px) { .minimap { display: none; } .dock { width: min(780px, calc(100% - 32px)); } }
+
+/* Coverage overlay */
+.cov .node .badge { display: block; }
+.badge rect { fill: var(--surface); stroke: var(--rule-strong); }
+.badge text { font-family: var(--mono); font-size: 10px; fill: var(--ink-2); }
+.cov .node.cold .card { stroke: var(--fail); stroke-dasharray: 4 3; }
+.cov .edge.untaken { stroke: var(--fail); stroke-dasharray: 5 5; opacity: 0.9; }
+
+/* Plain language: hide the machinery. */
+.plain .idx, .plain .elabel { display: none; }
+
+/* One-time reveal of the skeleton. */
+.intro .node { animation: rise 380ms var(--ease) both; animation-delay: var(--d); }
+.intro .edge { stroke-dasharray: var(--len); stroke-dashoffset: var(--len); animation: draw 480ms var(--ease) forwards; animation-delay: var(--d); }
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 0.5; transform: none; } }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .intro .node, .intro .edge, .callout { animation: none !important; }
+}
+
+@media (max-width: 860px) {
+  .app { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+  .side { max-height: 38dvh; border-inline-end: 0; border-bottom: 1px solid var(--rule); }
+}

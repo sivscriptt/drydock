@@ -1,0 +1,12 @@
+[
+ {
+  "id": 9001,
+  "label": "Approved",
+  "public_label": "Licence approved"
+ },
+ {
+  "id": 9002,
+  "label": "Rejected",
+  "public_label": null
+ }
+]
